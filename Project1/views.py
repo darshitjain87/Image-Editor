@@ -12,6 +12,7 @@ import mediapipe as mp
 from PIL import Image
 
 # Create your views here.
+#############Change the path before running##############
 
 def index(request):
     return render(request,'index.html')
@@ -63,7 +64,7 @@ def uploader(request, html):
             photo1 = photo
             image1 = cv2.imread(settings.MEDIA_ROOT+photo1.replace("/media","/"))
             filtered = cv2.filter2D(image1, -1, np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]]))
-            cv2.imwrite("C:/Users/DELL/Desktop/D/Website1/media/sharp.png", filtered)
+            cv2.imwrite("C:/Users/Admin/Desktop/Website1/media/sharp.png", filtered)
             return render(request, 'sharpen.html', {'bg_image': photo, 'output_image': FileSystemStorage().url('sharp.png')})
         # Render the same HTML page with the uploaded image displayed
         return render(request, html, {'bg_image': uploaded_file_url })
@@ -81,7 +82,7 @@ def back(request):
     photo2 = photo0
     mp_selfie_segmentation = mp.solutions.selfie_segmentation
     selfie_segmentation = mp_selfie_segmentation.SelfieSegmentation(model_selection=1)
-    p = "C:/Users/DELL/Desktop/D/Website1"
+    p = "C:/Users/Admin/Desktop/Website1"
     flag = True
     def changer(input_image):
         bg_image = cv2.imread(p+photo1)
@@ -101,8 +102,8 @@ def back(request):
 
         # combine frame and background image using the condition
         output_image = np.where(condition, input_image, bg_image)
-        cv2.imwrite("C:/Users/DELL/Desktop/D/Website1/media/input.png",input_image)
-        cv2.imwrite("C:/Users/DELL/Desktop/D/Website1/media/output.png",output_image)
+        cv2.imwrite("C:/Users/Admin/Desktop/Website1/media/input.png",input_image)
+        cv2.imwrite("C:/Users/Admin/Desktop/Website1/media/output.png",output_image)
     if photo2 == "":
         cap = cv2.VideoCapture(0)
         while cap.isOpened() and flag:
@@ -137,7 +138,7 @@ def cc(request):
         rgb_img[np.all(rgb_img == rgb, axis=-1)] = [n_rgb[0],n_rgb[1],n_rgb[2]]
         pixel_array[..., :3] = rgb_img
         output = Image.fromarray(pixel_array)
-        output.save("C:/Users/DELL/Desktop/D/Website1/media/cco.png")
+        output.save("C:/Users/Admin/Desktop/Website1/media/cco.png")
     return render(request, 'change_color.html', {'bg_image': photo, 'output_image': FileSystemStorage().url('cco.png')})     
 
 def crop1(request):
@@ -155,5 +156,5 @@ def crop1(request):
             r[1] = r[1] - r[3]
         image = Image.open(settings.MEDIA_ROOT+photo1.replace("/media","/"))
         cropped_image = image.crop((r[0], r[1], r[0]+r[2], r[1]+r[3]))
-        cropped_image.save('C:/Users/DELL/Desktop/D/Website1/media/crop_output.png')
+        cropped_image.save('C:/Users/Admin/Desktop/Website1/media/crop_output.png')
     return render(request, 'crop.html',{'bg_image': photo, 'output_image': FileSystemStorage().url('crop_output.png')})
