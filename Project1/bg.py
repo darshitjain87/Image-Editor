@@ -7,7 +7,7 @@ def BGRemover():
     mp_selfie_segmentation = mp.solutions.selfie_segmentation
     selfie_segmentation = mp_selfie_segmentation.SelfieSegmentation(model_selection=1)
 
-    image_path = "C:/Users/DELL/Desktop/D/images"
+    image_path = "C:/Users/Admin/Desktop/D/Website1/images"
     images = os.listdir(image_path)
 
     image_index= 0
