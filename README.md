@@ -1,7 +1,8 @@
 # Image-Editor
 Welcome to Image-Editor, the AI-based photo editing website that lets you change backgrounds, colors, crop, sharpen images, and much more with just a single click. With exceptional image quality and fast processing times, Image-Editor is the ultimate tool for all your photo editing needs.
 
-To get started, simply run **pip install -r requirements.txt** to download all the necessary libraries. Then to, create a new Django project using django-admin startproject Website1, replacing 'Website1' with the name of your choice.
+To get started, simply run **pip install -r requirements.txt** to download all the necessary libraries. 
+Then to, create a new Django project using **django-admin startproject Website1**, replacing 'Website1' with the name of your choice.
 
 Next, create a new Django app using **python manage.py startapp Project**, again replacing 'Project' with the name of your choice.
 
