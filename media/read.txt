@@ -1,0 +1,1 @@
+This folder will act as runtime database where all images will be stored and access for later use
