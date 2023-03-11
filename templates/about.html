@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+  <div class="page-header d-flex align-items-center">
+    <div class="container position-relative">
+      <div class="row d-flex justify-content-center">
+        <div class="col-lg-6 text-center">
+          <h2>About</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ======= About Section ======= -->
+  <section id="about" class="about">
+    <div class="container">
+      <div class="row gy-4 justify-content-center">
+        <div >
+          <img src="{% static 'assets/img/profile.jpg' %}" style="width:100%;height:auto;" alt="">
+        </div>
+        <div >
+          <h2>Professional Programmer </h2>
+          <p class="fst-italic py-3">
+            We are dedicated to providing you with the best possible experience and are thrilled to hear that our efforts have resulted in your satisfaction.</p>
+          <div class="row">
+            <div class="col-lg-6">
+              <ul>
+                <li><i class="bi bi-chevron-right"></i> <strong>Website:</strong> <span>www.imageeditor.com</span></li>
+                <li><i class="bi bi-chevron-right"></i> <strong>Phone:</strong> <span>+00 5555 6666 55</span></li>
+                <li><i class="bi bi-chevron-right"></i> <strong>Country:</strong> <span>India</span></li>
+              </ul>
+            </div>
+            <div class="col-lg-6">
+              <ul>
+                <li><i class="bi bi-chevron-right"></i> <strong>Degree:</strong> <span>Bachelors</span></li>
+                <li><i class="bi bi-chevron-right"></i> <strong>Email:</strong> <span>imageeditor@example.com</span></li>
+                <li><i class="bi bi-chevron-right"></i> <strong>Freelance:</strong> <span>Available</span></li>
+              </ul>
+            </div>
+          </div>
+          <p class="py-3">
+            We understand that your images are important to you, and we are dedicated to ensuring that they look their best. Our team of skilled editors is committed to providing high-quality work that meets and exceeds your expectations. Whether you need color correction, background removal, or any other editing services, we are here to help. 
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section><!-- End About Section -->
+
+  <!-- ======= Testimonials Section ======= -->
+  <section id="testimonials" class="testimonials">
+    <div class="container">
+
+      <center><div class="section-header">
+        <h2>Testimonials</h2>
+        <p>What they are saying</p>
+      </div></center>
+
+      <div class="slides-3 swiper">
+        <div class="swiper-wrapper">
+
+          <div class="swiper-slide">
+            <div class="testimonial-item">
+              <div class="stars">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+              <p>
+                I can't say enough good things about this company. The customer service is fantastic, and the quality of the product is exceptional. I will definitely be a repeat customer
+              </p>
+              <div class="profile mt-auto">
+                <img src="{% static 'assets/img/testimonials/testimonials-1.jpg' %}" class="testimonial-img" alt="">
+                <h3>Saul Goodman</h3>
+                <h4>Ceo &amp; Founder</h4>
+              </div>
+            </div>
+          </div><!-- End testimonial item -->
+
+          <div class="swiper-slide">
+            <div class="testimonial-item">
+              <div class="stars">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+              <p>
+                I had a question about my order and reached out to customer service. They responded quickly and were extremely helpful. It's refreshing to see a company that truly values their customers.
+              </p>
+              <div class="profile mt-auto">
+                <img src="{% static 'assets/img/testimonials/testimonials-2.jpg' %}" class="testimonial-img" alt="">
+                <h3>Sara Wilsson</h3>
+                <h4>Designer</h4>
+              </div>
+            </div>
+          </div><!-- End testimonial item -->
+
+          <div class="swiper-slide">
+            <div class="testimonial-item">
+              <div class="stars">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+              <p>
+                I recently used this service and was blown away by the level of professionalism and attention to detail. I highly recommend them to anyone looking for quality work and excellent customer service.
+              </p>
+              <div class="profile mt-auto">
+                <img src="{% static 'assets/img/testimonials/testimonials-3.jpg' %}" class="testimonial-img" alt="">
+                <h3>Jena Karlis</h3>
+                <h4>Store Owner</h4>
+              </div>
+            </div>
+          </div><!-- End testimonial item -->
+
+          <div class="swiper-slide">
+            <div class="testimonial-item">
+              <div class="stars">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+              <p>
+                I have been a customer for several years now and have always been impressed with the level of service I receive. The staff is knowledgeable and friendly, and the product is always top-notch.
+              </p>
+              <div class="profile mt-auto">
+                <img src="{% static 'assets/img/testimonials/testimonials-4.jpg' %}" class="testimonial-img" alt="">
+                <h3>Matt Brandon</h3>
+                <h4>Freelancer</h4>
+              </div>
+            </div>
+          </div><!-- End testimonial item -->
+
+          <div class="swiper-slide">
+            <div class="testimonial-item">
+              <div class="stars">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+              <p>
+                The team at this company is amazing. They are always willing to go the extra mile to make sure their customers are satisfied. I am so happy to have found such a reliable and trustworthy company to work with.
+              </p>
+              <div class="profile mt-auto">
+                <img src="{% static 'assets/img/testimonials/testimonials-5.jpg' %}" class="testimonial-img" alt="">
+                <h3>John Larson</h3>
+                <h4>Entrepreneur</h4>
+              </div>
+            </div>
+          </div><!-- End testimonial item -->
+
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+
+    </div>
+  </section><!-- End Testimonials Section -->
+
+{% endblock %}

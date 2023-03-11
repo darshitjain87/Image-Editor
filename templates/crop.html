@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<br><br><br><br><br><br>
+  <center>
+    {% if error %}
+      <h1 style="color:#FF0000">{{ error }}</h1>
+    {% endif %}
+    {% if bg_image %}
+      <a href="/crop"style="font-size:20px;">Upload again</a><br>
+      {% if output_image %}
+        <h1>Cropped Image </h1>
+        <button onclick="downloadImage()">Download</button><br>
+        <img src="{{ output_image }}" width="640" height="auto" alt="Uploaded Image">
+        {% else %}
+        <form method="POST" action="{% url 'crop1' %}" onsubmit="return validateForm()">
+          {% csrf_token %}
+          <h1>Select the area to be cropped</h1>
+          Currently Selected: <input type="text" name="rectan" id="rectan" value="" readonly required> <input type="submit" value="Crop">
+        </form><br>
+        <canvas id="canvas" height="100" width="100"> </canvas>
+      {% endif %}
+    {% else %}
+      <h1>Upload Image</h1>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="image" accept="image/png, image/jpeg, image/jpg" required >
+        <button type="submit" >Upload</button>
+      </form>
+    {% endif %}
+  </center>
+  <script>
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    var bg_image = new Image();
+    bg_image.onload = function() {
+        canvas.width = this.width;
+        canvas.height = this.height;
+        ctx.drawImage(bg_image, 0, 0, canvas.width, canvas.height);
+    };
+    bg_image.src = "{{ bg_image }}";
+    // Add event listener for drag and drop function
+    canvas.addEventListener("mousedown", dragStart);
+    canvas.addEventListener("mouseup", dragEnd);
+    canvas.addEventListener("mousemove", drag);
+    
+    var rect = {x:0, y:0, w:0, h:0};
+    var isDragging = false;
+    
+    // Draw rectangular form with red border
+    function drawRect() {
+        ctx.beginPath();
+        ctx.rect(rect.x, rect.y, rect.w, rect.h);
+        ctx.strokeStyle = "red";
+        ctx.stroke();
+    }
+    
+    function dragStart(e) {
+        rect.x = e.offsetX;
+        rect.y = e.offsetY;
+        rect.w = 0;
+        rect.h = 0;
+        isDragging = true;
+    }
+    
+    function dragEnd() {
+        isDragging = false;
+        document.getElementById("rectan").value = rect.x+","+rect.y+","+rect.w+","+rect.h;
+    }
+    
+    function drag(e) {
+        if (isDragging) {
+            rect.w = e.offsetX - rect.x;
+            rect.h = e.offsetY - rect.y;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(bg_image, 0, 0, canvas.width, canvas.height);
+            drawRect();
+        }
+    }
+    function validateForm() {
+      var r = document.getElementById("rectan").value;
+      if (r == "") {
+          alert("Please select an area for cropping");
+          return false;
+      }
+      if (rect.w == 0 || rect.h == 0) {
+        alert("Please select a non-zero area for cropping");
+        return false;
+      }
+    }
+    function downloadImage() {
+      var url = "{{ output_image }}";
+      var filename = "output_image.png";
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  </script>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br>
+{% endblock %}
