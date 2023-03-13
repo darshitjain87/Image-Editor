@@ -48,9 +48,9 @@ def BGRemover():
         if key == ord('q'):
             break
         elif key == ord('s'):
-            cv2.imwrite("C:/Users/DELL/Pictures/saved/input.png",input_image)
-            cv2.imwrite("C:/Users/DELL/Pictures/saved/bg.png",bg_image)
-            cv2.imwrite("C:/Users/DELL/Pictures/saved/output.png",output_image)
+            cv2.imwrite("C:/Users/Admin/Pictures/saved/input.png",input_image)
+            cv2.imwrite("C:/Users/Admin/Pictures/saved/bg.png",bg_image)
+            cv2.imwrite("C:/Users/Admin/Pictures/saved/output.png",output_image)
         elif key == ord('b'):
             if image_index != len(images)-1:
                 image_index += 1
