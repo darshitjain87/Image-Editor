@@ -11,4 +11,7 @@ Image-Editor uses Python's cv2 library, which provides an easy and efficient way
 
 In addition, Image-Editor uses Mediapipe's selfie_segmentation model for background removal in real-time video streams. This advanced model uses deep neural networks to detect and remove the background, leaving only the person's face and any foreground objects.
 
+![image](https://github.com/darshitjain87/Image-Editor/assets/94097200/d98e0ceb-6461-4783-b488-6e5d430bbd0f)
+![input](https://github.com/darshitjain87/Image-Editor/assets/94097200/15fa972e-7cd1-46b4-a17a-cc0841375e8b)![bg_image13](https://github.com/darshitjain87/Image-Editor/assets/94097200/32090438-86ee-4b5c-819c-5e61d9c0d0dc)![output](https://github.com/darshitjain87/Image-Editor/assets/94097200/90e94eb8-f560-41cd-98a8-a0cfdb299d21)
+
 I would like to invite you to try out Image-Editor and contribute to the project. Your feedback and bug reports are highly appreciated and will help me improve the platform.
