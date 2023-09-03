@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<br><br><br><br><br><br>
+<br><br><br><br><br><br><br>
   <center>
     {% if error %}
       <h1 style="color:#FF0000">{{ error }}</h1>
@@ -11,10 +11,10 @@
       {% if output_image %}
         <h1>Cropped Image </h1>
         <button onclick="downloadImage()">Download</button><br>
-        <img src="{{ output_image }}" width="640" height="auto" alt="Uploaded Image">
+        <img src="{{ output_image }}" width="640" height="480" alt="Uploaded Image">
         {% else %}
         <form method="POST" action="{% url 'crop1' %}" onsubmit="return validateForm()">
-          {% csrf_token %}
+          
           <h1>Select the area to be cropped</h1>
           Currently Selected: <input type="text" name="rectan" id="rectan" value="" readonly required> <input type="submit" value="Crop">
         </form><br>
@@ -23,7 +23,7 @@
     {% else %}
       <h1>Upload Image</h1>
       <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
+        
         <input type="file" name="image" accept="image/png, image/jpeg, image/jpg" required >
         <button type="submit" >Upload</button>
       </form>
@@ -89,15 +89,13 @@
       }
     }
     function downloadImage() {
-      var url = "{{ output_image }}";
-      var filename = "output_image.png";
       var a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
+      a.href =  "{{ output_image }}";
+      a.download = "output_image.png";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
     }
   </script>
-  <br><br><br><br><br><br><br><br><br><br><br><br><br>
+  
 {% endblock %}
