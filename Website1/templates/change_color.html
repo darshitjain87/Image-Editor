@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-
+<br><br><br><br><br><br><br>
     <center>
-        <br><br><br><br><br><br><br>
+        
         {% if error %}
             <h1 style="color:#FF0000">{{ error }}</h1>
         {% endif %}
@@ -14,27 +14,25 @@
                 <div style="font-size:20px;display: flex;"><div style="padding-left: 20%">Original Image</div><div style="padding-left: 37%">Color Changed</div></div>
                 <div style="display: flex;">
                     <div style="padding-left: 20px; padding-right: 5px;">
-                        <img src="{{ bg_image }}" width="640" height="auto" alt="Uploaded Image">
+                        <img src="{{ bg_image }}" width="640" height="480" alt="Uploaded Image">
                     </div>
                     <div style="padding-right: 20px; padding-right: 5px;">
-                        <img src="{{ output_image }}" width="640" height="auto" alt="Uploaded Image">
+                        <img src="{{ output_image }}" width="640" height="480" alt="Uploaded Image">
                     </div>
                 </div>
                 <script>
                     function downloadImage() {
-                      var url = "{{ output_image }}";
-                      var filename = "output_image.png";
-                      var a = document.createElement('a');
-                      a.href = url;
-                      a.download = filename;
-                      document.body.appendChild(a);
-                      a.click();
-                      document.body.removeChild(a);
-                    }
+                        var a = document.createElement('a');
+                        a.href =  "{{ output_image }}";
+                        a.download = "output_image.png";
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                      }
                 </script>
             {% else%}
                 <form method="POST" action="{% url 'cc' %}" onsubmit="return validateForm()">
-                    {% csrf_token %}
+                    
                     <h1>Click on image color that is to be changed</h1>
                     Currently Selected: <input type="text" id="rgb" name="rgb" readonly required><br>
                     Select New Color: <input type="color" name="new-color"><br> 
@@ -45,12 +43,12 @@
         {% else %}
             <h1>Upload Image</h1>
             <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
+                
                 <input type="file" name="image" accept="image/png, image/jpeg, image/jpg" required >
                 <button type="submit" >Upload</button>
             </form>
         {% endif %}
-        <br><br><br><br><br><br><br><br><br><br><br><br>
+        
     </center>
     <script>
         var canvas = document.getElementById('canvas');
