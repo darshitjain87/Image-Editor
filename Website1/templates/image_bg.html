@@ -6,7 +6,7 @@
     <h1 style="color:#FF0000">{{ error }}</h1>
   {% endif %}
   <form method="POST" action="{% url 'imagebg' %}" enctype="multipart/form-data">
-    {% csrf_token %}
+    
     <center><div style="display: flex;">
       <div style="padding-left: 20px; padding-right: 5px; width:640px; ">
         {% if input_image %}
@@ -34,11 +34,9 @@
         <img src="{{ output_image }}" width="640" height="480" alt="Uploaded Image">
         <script>
           function downloadImage() {
-            var url = "{{ output_image }}";
-            var filename = "output_image.png";
             var a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
+            a.href =  "{{ output_image }}";
+            a.download = "output_image.png";
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -48,5 +46,5 @@
         <a href="{% url 'back' %}">Remove Background</a><br>
       {% endif %}
     </center>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br>
+    
 {% endblock %}
