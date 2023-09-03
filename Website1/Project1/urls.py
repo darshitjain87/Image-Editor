@@ -8,6 +8,7 @@ urlpatterns = [
     path('about.html', views.about, name = 'about'),
     path('pricing.html', views.pricing, name = 'pricing'),
     path('contact.html', views.contact, name = 'contact'),
+    path('privacy.html', views.privacy, name = 'privacy'),
     path('background/', views.background,),
     path('back/', views.back, name='back'),
     path('camera/', views.camera, name='cam'),
@@ -17,6 +18,8 @@ urlpatterns = [
     path('crop/', views.crop, name='crop'), 
     path('crop1/', views.crop1, name='crop1'),
     path('sharpen/', views.sharpen_image),
+    path('captured/', views.captured, name='captured'),
+    path('process_image/', views.process_image, name='process_image'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
