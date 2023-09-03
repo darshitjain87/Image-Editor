@@ -1,6 +1,6 @@
 from django.urls import path
 from django.conf import settings
-from django.conf.urls.static import static
+from django.conf.urls.static import static, serve
 from . import views
 
 urlpatterns = [
@@ -11,7 +11,6 @@ urlpatterns = [
     path('privacy.html', views.privacy, name = 'privacy'),
     path('background/', views.background,),
     path('back/', views.back, name='back'),
-    path('camera/', views.camera, name='cam'),
     path('imagebg/', views.image, name='imagebg'),
     path('change_color/', views.change_color, name='change_color'),
     path('cc/', views.cc, name='cc'),
