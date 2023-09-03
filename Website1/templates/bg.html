@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+<br><br><br><br>
   <div style="display: flex;">
     <div style="padding-left: 20px; padding-right: 5px;">
       {% if not input_image %}
@@ -36,7 +37,7 @@
     {% if not bg_image %}
       <h1>Upload Background Image</h1>
       <form method="POST" action="{% url 'cam' %}" enctype="multipart/form-data">
-        {% csrf_token %}
+        
         <input type="file" name="image" accept="image/png, image/jpeg, image/jpg" required >
         <button type="submit" >Upload</button>
       </form>
@@ -52,11 +53,9 @@
       <img src="{{ output_image }}" width="640" height="480" alt="Uploaded Image">
       <script>
         function downloadImage() {
-          var url = "{{ output_image }}";
-          var filename = "output_image.png";
           var a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
+          a.href =  "{{ output_image }}";
+          a.download = "output_image.png";
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
