@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<br><br><br><br><br><br>
+<br><br><br><br><br><br><br>
     <center>
         {% if error %}
             <h1 style="color:#FF0000">{{ error }}</h1>
@@ -13,19 +13,17 @@
                 <div style="font-size:20px;display: flex;"><div style="padding-left: 20%">Original Image</div><div style="padding-left: 37%">Sharpened Image</div></div>
                 <div style="display: flex;">
                     <div style="padding-left: 20px; padding-right: 5px;">
-                        <img src="{{ bg_image }}" width="640" height="auto" alt="Uploaded Image">
+                        <img src="{{ bg_image }}" width="640" height="480" alt="Uploaded Image">
                     </div>
                     <div style="padding-right: 20px; padding-right: 5px;">
-                        <img src="{{ output_image }}" width="640" height="auto" alt="Sharpened Image">
+                        <img src="{{ output_image }}" width="640" height="480" alt="Sharpened Image">
                     </div>
                 </div>
                 <script>
                     function downloadImage() {
-                      var url = "{{ output_image }}";
-                      var filename = "output_image.png";
                       var a = document.createElement('a');
-                      a.href = url;
-                      a.download = filename;
+                      a.href =  "{{ output_image }}";
+                      a.download = "output_image.png";
                       document.body.appendChild(a);
                       a.click();
                       document.body.removeChild(a);
@@ -35,11 +33,11 @@
         {% else %}
             <h1>Upload Image</h1>
             <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
+                
                 <input type="file" name="image" accept="image/png, image/jpeg, image/jpg" required >
                 <button type="submit" >Upload</button>
             </form>
         {% endif %}
     </center>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br>
+    
 {% endblock %}
