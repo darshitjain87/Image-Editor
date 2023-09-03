@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<br><br><br>
+    <h2>Image Background Changer</h2>
+    <center>
+    <video id="video" width="640" height="480" autoplay></video>
+    <br>Select Background<input type="file" id="bgImageInput">
+    <button id="uploadButton">Upload Background</button>
+    <button id="captureButton" style="display: none;">Capture Image</button>
+    <div style="display:flex;padding:15px"><canvas id="canvas" width="640" height="480" style="margin-right: 25px;"></canvas>
+    <img id="outputImage" style="display: none;" width="640" height="480"></div>
+    <button id="downloadButton" onclick="downloadImage()" style="display: none;">Download</button><center>
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('captureButton');
+        const downloadButton = document.getElementById('downloadButton');
+        const outputImage = document.getElementById('outputImage');
+        const ctx = canvas.getContext('2d');
+        const uploadButton = document.getElementById('uploadButton');
+        const bgImageInput = document.getElementById('bgImageInput');
+        let bgImage = null;
+        let x = null;
+        bgImageInput.addEventListener('change', () => {
+            bgImage = bgImageInput.files[0];
+            if (bgImage) {
+                captureButton.style.display = 'block';
+            } else {
+                captureButton.style.display = 'none';
+            }
+        });
+        
+        uploadButton.addEventListener('click', () => {
+            bgImageInput.click();
+        });
+        captureButton.addEventListener('click', async ()  => {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/jpeg'); // Convert canvas to base64 image data
+            // Send captured image data to the server
+            try {
+                const currentBgImage = bgImage;
+                const formData = new FormData();
+                formData.append('image_data', imageData);
+                formData.append('bg_image',  bgImage);
+                const response = await fetch('/process_image/', {
+                    method: 'POST',
+                    body: formData
+                });
+                const responseData = await response.json();
+                x= 'data:image/jpeg;base64,' + responseData.processed_image;
+                outputImage.src = x;
+                outputImage.style.display = 'block';
+                downloadButton.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        // Set up the webcam stream
+        navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(error => {
+            console.error('Error accessing webcam:', error);
+        });
+        function downloadImage() {
+            var a = document.createElement('a');
+            a.href = x;
+            a.download = "processed_image.png";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }
+    </script>
+{% endblock %}
