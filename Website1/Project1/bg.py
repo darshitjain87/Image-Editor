@@ -52,10 +52,14 @@ def BGRemover():
             cv2.imwrite("C:/Users/Admin/Pictures/saved/bg.png",bg_image)
             cv2.imwrite("C:/Users/Admin/Pictures/saved/output.png",output_image)
         elif key == ord('b'):
-            if image_index != len(images)-1:
-                image_index += 1
-            else:
-                image_index = 0
-            bg_image = cv2.imread(image_path+'/'+images[image_index])
+            while True:
+                if image_index != len(images)-1:
+                    image_index += 1
+                else:
+                    image_index = 0
+                bg_image = cv2.imread(image_path+'/'+images[image_index])
+                if bg_image is not None:
+                    print(image_index)
+                    break
     cap.release()
     cv2.destroyAllWindows()
