@@ -1,4 +1,3 @@
-###############################Change the path##############################
 from django.shortcuts import render
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -14,6 +13,7 @@ import cv2
 import numpy as np
 import mediapipe as mp  
 
+path = settings.MEDIA_ROOT
 # Create your views here.
 def index(request):
     return render(request,'index.html')
@@ -30,8 +30,9 @@ def pricing(request):
 def privacy(request):
     return render(request,'privacy.html')
 
+@csrf_exempt
 def background(request):
-    BGRemover()
+    BGRemover(settings.MEDIA_ROOT)
     return render(request, 'index.html')
 
 @csrf_exempt
@@ -67,7 +68,6 @@ def uploader(request, html):
         fs = FileSystemStorage()
         filename = fs.save(uploaded_image.name, uploaded_image)
         photo = uploaded_file_url = fs.url(filename)
-        print(uploaded_file_url)
         if html=="image_bg.html":
             uploaded_image0 = request.FILES['image0']
             ext0 = os.path.splitext(uploaded_image0.name)[1]
@@ -80,7 +80,7 @@ def uploader(request, html):
             photo1 = photo
             image1 = cv2.imread(settings.MEDIA_ROOT+photo1.replace("/media","/"))
             filtered = cv2.filter2D(image1, -1, np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]]))
-            cv2.imwrite("C:/Users/Admin/Desktop/D/Website1/media/sharp.png", filtered)
+            cv2.imwrite(path+"/sharp.png", filtered)
             return render(request, 'sharpen.html', {'bg_image': photo, 'output_image': FileSystemStorage().url('sharp.png')})
         # Render the same HTML page with the uploaded image displayed
         return render(request, html, {'bg_image': uploaded_file_url })
@@ -91,13 +91,13 @@ def back(request):
     global photo, photo0
     photo1 = photo
     photo2 = photo0
-    p = "C:/Users/Admin/Desktop/D/Website1"
+    p = path.replace("\media","")
     input_Image = cv2.imread(p+photo2)
     bg_image = cv2.imread(p+photo1)
     output_image = perform_background_removal(input_Image,bg_image)
-    cv2.imwrite("C:/Users/Admin/Desktop/D/Website1/media/input.png",input_Image)
-    cv2.imwrite("C:/Users/Admin/Desktop/D/Website1/media/output.png",output_image)
-    return render(request, 'bg.html', {'input_image':FileSystemStorage().url('input.png'),'bg_image': photo,'output_image':FileSystemStorage().url('output.png')} )
+    cv2.imwrite(path+"/input.png",input_Image)
+    cv2.imwrite(path+"/output.png",output_image)
+    return render(request, 'image_bg.html', {'input_image':FileSystemStorage().url('input.png'),'bg_image': photo,'output_image':FileSystemStorage().url('output.png')} )
 
 @csrf_exempt
 def cc(request):
@@ -118,7 +118,7 @@ def cc(request):
         rgb_img[np.all(rgb_img == rgb, axis=-1)] = [n_rgb[0],n_rgb[1],n_rgb[2]]
         pixel_array[..., :3] = rgb_img
         output = Image.fromarray(pixel_array)
-        output.save("C:/Users/Admin/Desktop/D/Website1/media/cco.png")
+        output.save(path+"/cco.png")
     return render(request, 'change_color.html', {'bg_image': photo, 'output_image': FileSystemStorage().url('cco.png')})     
 
 @csrf_exempt
@@ -137,7 +137,7 @@ def crop1(request):
             r[1] = r[1] - r[3]
         image = Image.open(settings.MEDIA_ROOT+photo1.replace("/media","/"))
         cropped_image = image.crop((r[0], r[1], r[0]+r[2], r[1]+r[3]))
-        cropped_image.save('C:/Users/Admin/Desktop/D/Website1/media/crop_output.png')
+        cropped_image.save(path+'/crop_output.png')
     return render(request, 'crop.html',{'bg_image': photo, 'output_image': FileSystemStorage().url('crop_output.png')})
 
 @csrf_exempt
@@ -183,10 +183,10 @@ def perform_background_removal(image_np, bg):
 
     # Combine the images using the condition
     try:
-        processed_image_np = np.where(condition, image_np, custom_bg_image) # trying rgb
+        processed_image_np = np.where(condition, image_np, custom_bg_image)
     except Exception as e:
-        processed_image_np = np.where(condition, image_np, custom_bg_image[:, :, :3]) # removing 'A' from RGBA
+        processed_image_np = np.where(condition, image_np, custom_bg_image[:, :, :3])
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    cv2.imwrite(f"C:/Users/Admin/Desktop/D/Website1/media/output_{timestamp}.png",processed_image_np)
+    cv2.imwrite(path+f"/output_{timestamp}.png",processed_image_np)
     
     return processed_image_np
