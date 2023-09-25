@@ -1,14 +1,13 @@
-#####################Change the Path#########################
 import os
 import cv2
 import numpy as np
 import mediapipe as mp
 
-def BGRemover():
+def BGRemover(path):
     mp_selfie_segmentation = mp.solutions.selfie_segmentation
     selfie_segmentation = mp_selfie_segmentation.SelfieSegmentation(model_selection=1)
 
-    image_path = "C:/Users/Admin/Desktop/D/Website1/images"
+    image_path = os.path.join(path, 'images')
     images = os.listdir(image_path)
 
     image_index= 0
@@ -22,6 +21,7 @@ def BGRemover():
 
         # flip the input_image to horizontal direction
         input_image = cv2.flip(input_image, 1)
+        input_image1 = cv2.flip(input_image, 1)
         height , width, channel = input_image.shape
 
         RGB = cv2.cvtColor(input_image, cv2.COLOR_BGR2RGB)
@@ -48,9 +48,9 @@ def BGRemover():
         if key == ord('q'):
             break
         elif key == ord('s'):
-            cv2.imwrite("C:/Users/Admin/Pictures/saved/input.png",input_image)
-            cv2.imwrite("C:/Users/Admin/Pictures/saved/bg.png",bg_image)
-            cv2.imwrite("C:/Users/Admin/Pictures/saved/output.png",output_image)
+            cv2.imwrite(path+"/input.png",input_image1)
+            cv2.imwrite(path+"/bg.png",bg_image)
+            cv2.imwrite(path+"/output.png",output_image)
         elif key == ord('b'):
             while True:
                 if image_index != len(images)-1:
@@ -59,7 +59,6 @@ def BGRemover():
                     image_index = 0
                 bg_image = cv2.imread(image_path+'/'+images[image_index])
                 if bg_image is not None:
-                    print(image_index)
                     break
     cap.release()
     cv2.destroyAllWindows()
