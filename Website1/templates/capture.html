@@ -4,10 +4,9 @@
 <br><br><br>
     <center>
     <h2>Image Background Changer</h2>
-    <video id="video" width="640" height="480" autoplay></video>
-    <br>Select Background<input type="file" id="bgImageInput">
-    <button id="uploadButton">Upload Background</button>
-    <button id="captureButton" style="display: none;">Capture Image</button>
+    <video id="video" style="transform: scaleX(-1);" width="640" height="480" autoplay ></video>
+    <br>Select Background <input type="file" id="bgImageInput">
+    <br><br><button id="captureButton" style="display: none;">Capture Image</button>
     <div style="display:flex;padding:15px"><canvas id="canvas" width="640" height="480" style="margin-right: 25px;"></canvas>
     <img id="outputImage" style="display: none;" width="640" height="480"></div>
     <button id="downloadButton" onclick="downloadImage()" style="display: none;">Download</button><center>
@@ -30,12 +29,12 @@
                 captureButton.style.display = 'none';
             }
         });
-        
-        uploadButton.addEventListener('click', () => {
-            bgImageInput.click();
-        });
         captureButton.addEventListener('click', async ()  => {
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            // Save and restore may be needed but currently works fine without them
+            // ctx.save(); 
+            ctx.scale(-1, 1); 
+            ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+            // ctx.restore();
             const imageData = canvas.toDataURL('image/jpeg'); // Convert canvas to base64 image data
             // Send captured image data to the server
             try {
@@ -65,6 +64,12 @@
         })
         .catch(error => {
             console.error('Error accessing webcam:', error);
+        });
+        window.addEventListener('beforeunload', () => {
+            if (video.srcObject) {
+                const tracks = video.srcObject.getTracks();
+                tracks.forEach(track => track.stop());
+            }
         });
         function downloadImage() {
             var a = document.createElement('a');
