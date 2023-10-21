@@ -14,6 +14,7 @@ import numpy as np
 import mediapipe as mp  
 
 path = settings.MEDIA_ROOT
+fs = FileSystemStorage()
 # Create your views here.
 def index(request):
     return render(request,'index.html')
@@ -32,7 +33,7 @@ def privacy(request):
 
 @csrf_exempt
 def background(request):
-    BGRemover(settings.MEDIA_ROOT)
+    BGRemover(path)
     return render(request, 'index.html')
 
 @csrf_exempt
@@ -55,36 +56,39 @@ def change_color(request):
 def sharpen_image(request):
     return uploader(request, 'sharpen.html')
 
+def extension_check(photo):
+    ext = os.path.splitext(photo.name)[1]
+    if ext not in ['.png', '.jpg', '.jpeg', '.svg']:
+        return True
+
 @csrf_exempt
 def uploader(request, html):
     global photo, photo0
     photo0 = "" 
+    context = dict()
     if request.method == 'POST' and request.FILES.get('image'):
         # Process the uploaded image
         uploaded_image = request.FILES['image']
-        ext = os.path.splitext(uploaded_image.name)[1]
-        if ext not in ['.png', '.jpg', '.jpeg', '.svg']:
+        if extension_check(uploaded_image):
             return render(request, html,{'error':"Invalid File Type"})
-        fs = FileSystemStorage()
         filename = fs.save(uploaded_image.name, uploaded_image)
         photo = uploaded_file_url = fs.url(filename)
+        context = {'bg_image': uploaded_file_url }
         if html=="image_bg.html":
             uploaded_image0 = request.FILES['image0']
-            ext0 = os.path.splitext(uploaded_image0.name)[1]
-            if ext0 not in ['.png', '.jpg', '.jpeg', '.svg']:
+            if extension_check(uploaded_image0):
                 return render(request, html,{'error':"Invalid File Type"})
             filename0 = fs.save(uploaded_image0.name, uploaded_image0)
-            photo0 = uploaded_file_url0 = fs.url(filename0)
-            return render(request, html, {'input_image': uploaded_file_url0, 'bg_image': uploaded_file_url })
+            photo0 = fs.url(filename0)
+            context = {'input_image': fs.url(filename0), 'bg_image': uploaded_file_url }
         if html=='sharpen.html':
             photo1 = photo
-            image1 = cv2.imread(settings.MEDIA_ROOT+photo1.replace("/media","/"))
+            image1 = cv2.imread(path+photo1.replace("/media","/"))
             filtered = cv2.filter2D(image1, -1, np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]]))
             cv2.imwrite(path+"/sharp.png", filtered)
-            return render(request, 'sharpen.html', {'bg_image': photo, 'output_image': FileSystemStorage().url('sharp.png')})
-        # Render the same HTML page with the uploaded image displayed
-        return render(request, html, {'bg_image': uploaded_file_url })
-    return render(request, html)
+            context = {'bg_image': photo, 'output_image': fs.url('sharp.png')}
+    return render(request, html,context)
+
 
 @csrf_exempt
 def back(request):
@@ -97,7 +101,7 @@ def back(request):
     output_image = perform_background_removal(input_Image,bg_image)
     cv2.imwrite(path+"/input.png",input_Image)
     cv2.imwrite(path+"/output.png",output_image)
-    return render(request, 'image_bg.html', {'input_image':FileSystemStorage().url('input.png'),'bg_image': photo,'output_image':FileSystemStorage().url('output.png')} )
+    return render(request, 'image_bg.html', {'input_image':fs.url('input.png'),'bg_image': photo,'output_image':fs.url('output.png')} )
 
 @csrf_exempt
 def cc(request):
@@ -111,7 +115,7 @@ def cc(request):
         n_rgb = request.POST.get('new-color')
         n_rgb = n_rgb.lstrip('#')
         n_rgb = tuple(int(n_rgb[i:i+2], 16) for i in (0, 2, 4))
-        img = Image.open(settings.MEDIA_ROOT+photo1.replace("/media","/"))
+        img = Image.open(path+photo1.replace("/media","/"))
         img = img.convert("RGB")
         pixel_array = np.array(img)
         rgb_img = pixel_array[..., :3]
@@ -119,7 +123,7 @@ def cc(request):
         pixel_array[..., :3] = rgb_img
         output = Image.fromarray(pixel_array)
         output.save(path+"/cco.png")
-    return render(request, 'change_color.html', {'bg_image': photo, 'output_image': FileSystemStorage().url('cco.png')})     
+    return render(request, 'change_color.html', {'bg_image': photo, 'output_image': fs.url('cco.png')})     
 
 @csrf_exempt
 def crop1(request):
@@ -135,10 +139,10 @@ def crop1(request):
         if r[3] < 0 :
             r[3] *= -1
             r[1] = r[1] - r[3]
-        image = Image.open(settings.MEDIA_ROOT+photo1.replace("/media","/"))
+        image = Image.open(path+photo1.replace("/media","/"))
         cropped_image = image.crop((r[0], r[1], r[0]+r[2], r[1]+r[3]))
         cropped_image.save(path+'/crop_output.png')
-    return render(request, 'crop.html',{'bg_image': photo, 'output_image': FileSystemStorage().url('crop_output.png')})
+    return render(request, 'crop.html',{'bg_image': photo, 'output_image': fs.url('crop_output.png')})
 
 @csrf_exempt
 def process_image(request):
