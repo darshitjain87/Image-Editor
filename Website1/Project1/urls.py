@@ -9,7 +9,7 @@ urlpatterns = [
     path('pricing.html', views.pricing, name = 'pricing'),
     path('contact.html', views.contact, name = 'contact'),
     path('privacy.html', views.privacy, name = 'privacy'),
-    path('background/', views.background,),
+    path('back/', views.back, name='back'),
     path('imagebg/', views.image, name='imagebg'),
     path('change_color/', views.change_color, name='change_color'),
     path('cc/', views.cc, name='cc'),
