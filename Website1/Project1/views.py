@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from PIL import Image
 import io
 import base64
-import datetime
+from datetime import datetime
 import os
 import cv2
 import numpy as np
