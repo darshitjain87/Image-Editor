@@ -190,7 +190,7 @@ def perform_background_removal(image_np, bg):
         processed_image_np = np.where(condition, image_np, custom_bg_image)
     except Exception as e:
         processed_image_np = np.where(condition, image_np, custom_bg_image[:, :, :3])
-    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     cv2.imwrite(path+f"/output_{timestamp}.png",processed_image_np)
     
     return processed_image_np
