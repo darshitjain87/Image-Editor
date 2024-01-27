@@ -4,7 +4,6 @@ from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from PIL import Image
-from .bg import *
 import io
 import base64
 import datetime
@@ -30,11 +29,6 @@ def pricing(request):
 
 def privacy(request):
     return render(request,'privacy.html')
-
-@csrf_exempt
-def background(request):
-    BGRemover(path)
-    return render(request, 'index.html')
 
 @csrf_exempt
 def captured(request):
