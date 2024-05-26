@@ -4,3 +4,4 @@ opencv-contrib-python==4.6.0.66
 opencv-python==4.6.0.66
 mediapipe==0.10.2
 Pillow==10.0.0
+whitenoise==6.6.0
