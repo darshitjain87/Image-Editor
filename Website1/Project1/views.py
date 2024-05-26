@@ -89,9 +89,8 @@ def back(request):
     global photo, photo0
     photo1 = photo
     photo2 = photo0
-    p = path.replace("\media","")
-    input_Image = cv2.imread(p+photo2)
-    bg_image = cv2.imread(p+photo1)
+    input_Image = cv2.imread(path+photo2.replace("media/",""))
+    bg_image = cv2.imread(path+photo1.replace("media/",""))
     output_image = perform_background_removal(input_Image,bg_image)
     cv2.imwrite(path+"/input.png",input_Image)
     cv2.imwrite(path+"/output.png",output_image)
