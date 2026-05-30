@@ -10,7 +10,9 @@ from datetime import datetime
 import os
 import cv2
 import numpy as np
-import mediapipe as mp  
+import mediapipe as mp
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
 
 path = settings.MEDIA_ROOT
 fs = FileSystemStorage()
@@ -101,20 +103,33 @@ def cc(request):
     global photo 
     photo1 = photo
     if request.method == 'POST':
-        rgb = request.POST.get('rgb')
-        rgb = rgb.split(",")
-        rgb = [int(i) for i in rgb ]
-        rgb.pop()
+        rgb_raw = request.POST.get('rgb') 
+
+        r, g, b, a = map(int, rgb_raw.split(','))
+        target_rgb = np.array([r, g, b], dtype=np.uint8)
+
+        # new color (#RRGGBB)
         n_rgb = request.POST.get('new-color')
         n_rgb = n_rgb.lstrip('#')
-        n_rgb = tuple(int(n_rgb[i:i+2], 16) for i in (0, 2, 4))
-        img = Image.open(path+photo1.replace("/media","/"))
-        img = img.convert("RGB")
+        new_rgb = np.array(
+            tuple(int(n_rgb[i:i+2], 16) for i in (0, 2, 4)),
+            dtype=np.uint8
+        )
+
+        # ---- Load image ----
+        img = Image.open(path + photo1.replace("/media", "/")).convert("RGB")
         pixel_array = np.array(img)
-        rgb_img = pixel_array[..., :3]
-        rgb_img[np.all(rgb_img == rgb, axis=-1)] = [n_rgb[0],n_rgb[1],n_rgb[2]]
-        pixel_array[..., :3] = rgb_img
-        output = Image.fromarray(pixel_array)
+
+        # ---- Replace color with tolerance ----
+        diff = np.abs(pixel_array.astype(int) - target_rgb)
+        mask = np.all(diff <= 5, axis=-1)   # tolerance helps with real images
+
+        # print("Matched pixels:", np.count_nonzero(mask))
+
+        pixel_array[mask] = new_rgb
+
+        # ---- Save output ----
+        output = Image.fromarray(pixel_array.astype(np.uint8))
         output.save(path+"/cco.png")
     return render(request, 'change_color.html', {'bg_image': photo, 'output_image': fs.url('cco.png')})     
 
@@ -161,16 +176,21 @@ def process_image(request):
     return JsonResponse({'error':"Error"})
 
 def perform_background_removal(image_np, bg):
-    mp_selfie_segmentation = mp.solutions.selfie_segmentation
-    selfie_segmentation = mp_selfie_segmentation.SelfieSegmentation(model_selection=1)
-
     RGB = cv2.cvtColor(image_np, cv2.COLOR_BGR2RGB)
+    mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=RGB)
 
-    # Get the result
-    results = selfie_segmentation.process(RGB)
+    model_path = settings.MODULES_ROOT + "/selfie_multiclass_256x256.tflite"
 
-    # Extract segmented mask
-    mask = results.segmentation_mask
+    base_options = python.BaseOptions(model_asset_path=model_path)
+
+    options = vision.ImageSegmenterOptions(base_options=base_options, output_category_mask=True)
+
+    with vision.ImageSegmenter.create_from_options(options) as segmenter:
+        segmentation_result = segmenter.segment(mp_image)
+
+    mask = segmentation_result.category_mask.numpy_view()
+
+    mask = np.squeeze(mask)
 
     # Define a condition for the mask
     condition = np.stack((mask,) * 3, axis=-1) > 0.6
